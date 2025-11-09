@@ -1,0 +1,40 @@
+{
+  "name": "stash_back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "main": "src/index.ts",
+    "dev": "nodemon --exec ts-node index.ts",
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "body-parser": "^2.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.7",
+    "plaid": "^39.1.0",
+    "ts-node": "^10.9.2",
+    "uuid": "^13.0.0"
+  },
+  "dependenciesComments": {
+    "body-parser": "Request Parsing",
+    "cors": "CORS Support",
+    "dotenv": "Env Variable Loader",
+    "express": "Webserver Library",
+    "nodemon": "Hot reload support",
+    "plaid": "Plaid Support",
+    "ts-node": "Typescript support for nodemon",
+    "uuid": "Client Id Creation"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
