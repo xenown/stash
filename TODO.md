@@ -1,6 +1,6 @@
 # TODO
  - [ ] Backend
-   - [ ] Prep file structure
+   - [x] Prep file structure
    - [ ] Plaid Integration
      - [ ] User Creation
      - [ ] Account Registration
