@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Manage all backend APIs.
+ */
+
+// APIS
+// Healthcheck
+// User Creation
+// Account Registration
+// Pull accounts
+// Pull transactions / account
+// Extension 
+// 
+
 'use strict';
 
 // read env vars from .env file
