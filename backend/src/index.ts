@@ -11,7 +11,8 @@
 // Extension 
 // 
 
-'use strict';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 // read env vars from .env file
 require('dotenv').config();

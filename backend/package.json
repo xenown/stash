@@ -13,15 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/express": "^5.0.5",
-    "@types/node": "^24.10.1",
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "nodemon": "^3.1.7",
     "plaid": "^39.1.0",
-    "ts-node": "^10.9.2",
     "uuid": "^13.0.0"
   },
   "dependenciesComments": {
@@ -31,10 +28,20 @@
     "express": "Webserver Library",
     "nodemon": "Hot reload support",
     "plaid": "Plaid Support",
-    "ts-node": "Typescript support for nodemon",
     "uuid": "Client Id Creation"
   },
   "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^9.39.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
-  }
+  },
+  "devDependenciesComments": {
+    "@types": "Typescript types",
+    "eslint": "^9.39.1",
+    "ts-node": "Typescript support for nodemon",
+  },
 }
