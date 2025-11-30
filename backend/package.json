@@ -1,27 +1,24 @@
 {
   "name": "stash_back",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "main": "src/index.ts",
-    "dev": "nodemon --exec ts-node index.ts",
-    "start": "nodemon index.js",
+    "start": "nodemon --exec ts-node src/index.ts",
+    "pretty": "npx prettier --write .",
+    "lint": "npx eslint . --fix",
+    "build": "node ./build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/express": "^5.0.5",
-    "@types/node": "^24.10.1",
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "nodemon": "^3.1.7",
     "plaid": "^39.1.0",
-    "ts-node": "^10.9.2",
     "uuid": "^13.0.0"
   },
   "dependenciesComments": {
@@ -29,12 +26,35 @@
     "cors": "CORS Support",
     "dotenv": "Env Variable Loader",
     "express": "Webserver Library",
-    "nodemon": "Hot reload support",
     "plaid": "Plaid Support",
-    "ts-node": "Typescript support for nodemon",
     "uuid": "Client Id Creation"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "@eslint/js": "^9.39.1",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "esbuild": "^0.27.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.7.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
+  },
+  "devDependenciesComments": {
+    "@types": "Typescript types",
+    "esbuild": "Bundler with ts support",
+    "*eslint*": "Linting dependencies",
+    "globals": "eslint dependency",
+    "nodemon": "Hot reload support",
+    "prettier": "Code formatter",
+    "eslint-config-prettier": "disable ESlint rules that conflict with Prettier",
+    "eslint-plugin-prettier": "run Prettier as ESLint rule",
+    "ts-node": "Typescript support for nodemon"
   }
 }
