@@ -6,12 +6,12 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { matchedData } from "express-validator";
 
-import { plaid } from "../plaid/Plaid";
+import { plaid } from "../plaid/Plaid.ts";
 import {
   validate,
   countryCodeValidator,
   productValidator,
-} from "./InputValidators";
+} from "./InputValidators.ts";
 
 const router = Router();
 

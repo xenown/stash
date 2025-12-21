@@ -9,7 +9,6 @@
 // Each extension will register its own products
 // Make whatever API calls it needs
 
-import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 import type {
   CountryCode,
   LinkTokenCreateRequest,
@@ -17,9 +16,12 @@ import type {
   Products,
 } from "plaid";
 import type { AxiosResponse, AxiosError } from "axios";
+
+import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 import { isAxiosError } from "axios";
-import { datastore } from "../datastore/Datastore.ts";
 import { createLogger, format, transports } from "winston";
+
+import { datastore } from "../datastore/Datastore.ts";
 
 const logger = createLogger({
   level: "info",

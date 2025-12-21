@@ -19,8 +19,8 @@ import cors from "cors";
 import { transports, format } from "winston";
 import { logger } from "express-winston";
 
-import { router as accountRouter } from "./endpoints/AccountEndpoints";
-import { router as txnRouter } from "./endpoints/TransactionEndpoints";
+import { router as accountRouter } from "./endpoints/AccountEndpoints.ts";
+import { router as txnRouter } from "./endpoints/TransactionEndpoints.ts";
 
 // Read in .env config values
 dotenv.config();
@@ -59,7 +59,7 @@ app.get("/health", (_, res) => {
   res.send("Hello from TypeScript Express!");
 });
 
-app.use("/api", accountRouter);
+app.use("/account", accountRouter);
 app.use("/api", txnRouter);
 
 app.listen(port, () => {
