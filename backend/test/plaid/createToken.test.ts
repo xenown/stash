@@ -24,7 +24,7 @@ describe("Plaid Token Creation", () => {
     const plaidInstance = plaid();
     const res = await plaidInstance.createLinkToken(
       [CountryCode.Us],
-      Products.Assets,
+      [Products.Assets],
     );
     assert.isNull(res);
   });
@@ -34,7 +34,7 @@ describe("Plaid Token Creation", () => {
     const plaidInstance = plaid();
     const res = await plaidInstance.createLinkToken(
       [CountryCode.Us],
-      Products.Assets,
+      [Products.Assets],
     );
     assert.isNull(res);
   });
@@ -43,7 +43,7 @@ describe("Plaid Token Creation", () => {
     const plaidInstance = plaid();
     const res = await plaidInstance.createLinkToken(
       [CountryCode.Us],
-      Products.Transactions,
+      [Products.Transactions],
     );
     assert.isNotNull(res);
   });

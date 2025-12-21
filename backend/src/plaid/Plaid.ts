@@ -16,7 +16,17 @@ import type {
   LinkTokenCreateResponse,
   Products,
 } from "plaid";
+import type { AxiosResponse, AxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { datastore } from "../datastore/Datastore.ts";
+import { createLogger, format, transports } from "winston";
+
+const logger = createLogger({
+  level: "info",
+  format: format.combine(format.timestamp(), format.json()),
+  defaultMeta: { service: "plaid" },
+  transports: [new transports.Console()],
+});
 
 /**
  * Singleton class for abstracting Plaid API interfaces. It is also responsible
@@ -61,13 +71,13 @@ class Plaid {
    *
    * @param countryCodes: List of plaid-supported country codes. See
    * https://plaid.com/docs/api/link/#link-token-create-request-products
-   * @param product: Type of product the user wishes to register for under their
+   * @param products: Type of product the user wishes to register for under their
    * Plaid account
    * @returns A successful link token or null if plaid request failed.
    */
   public async createLinkToken(
-    countryCodes: [CountryCode],
-    product: Products,
+    countryCodes: CountryCode[],
+    products: Products[],
   ): Promise<LinkTokenCreateResponse | null> {
     const userId = datastore().getUserId();
     const configs: LinkTokenCreateRequest = {
@@ -77,12 +87,17 @@ class Plaid {
       user: {
         client_user_id: userId,
       },
-      products: [product],
+      products: products,
     };
-    return this.withRetry(async () => {
-      const resp = await this.client.linkTokenCreate(configs);
-      return resp.data;
+    const res = await this.withRetry(() => {
+      return this.client.linkTokenCreate(configs);
     });
+    if (isAxiosError(res)) {
+      return null;
+    } else {
+      // Must be success
+      return res;
+    }
   }
 
   /**
@@ -94,22 +109,40 @@ class Plaid {
    */
   public exchangePublicToken(): void {}
 
+  /**
+   * Helper function for retrying plaid calls
+   *
+   * @param fn a thin wrapper call over a plaid api call. It is expected to
+   * return either an AxiosResponse or an AxiosError. Any other errors will
+   * be immediately rethrown.
+   * @param retriesLeft number of retries to make for an api call
+   * @param interval time (ms) to wait between retries
+   * @return a successful axios response or the last failed axios response
+   */
   private async withRetry<T>(
-    fn: () => T,
+    fn: () => Promise<AxiosResponse<T>>,
     retriesLeft: number = 3,
     interval: number = 300,
-  ): Promise<T | null> {
+  ): Promise<T | AxiosError> {
     if (process.env["PLAID_ENV"] == "sandbox") {
       // In test mode, don't bother with retries.
       retriesLeft = 0;
     }
     try {
-      const result = await fn();
-      return result;
+      const resp = await fn();
+      return resp.data;
     } catch (error) {
-      console.log(error);
-      if (retriesLeft === 0) {
-        return null;
+      if (isAxiosError(error)) {
+        const errorResponse = error.response ? error.response.data : null;
+        logger.info("withRetry failed", [error.request.path, errorResponse]);
+        if (retriesLeft == 0) {
+          return error;
+        }
+      } else {
+        logger.info("withRetry failed", error);
+        if (retriesLeft == 0) {
+          throw error;
+        }
       }
 
       // Wait for the specified interval before the next attempt
@@ -122,6 +155,7 @@ class Plaid {
 const plaid = () => {
   if (!plaidVariable) {
     plaidVariable = new Plaid(Plaid.getPlaidConfiguration());
+    logger.info("Plaid service succesfully started.");
   }
   return plaidVariable;
 };

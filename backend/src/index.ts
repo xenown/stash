@@ -16,6 +16,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import compression from "compression";
 import cors from "cors";
+import { transports, format } from "winston";
+import { logger } from "express-winston";
 
 import { router as accountRouter } from "./endpoints/AccountEndpoints";
 import { router as txnRouter } from "./endpoints/TransactionEndpoints";
@@ -41,6 +43,14 @@ app.use(bodyParser.json());
 // Use gzip compression for responses for smaller response payloads
 app.use(compression());
 app.use(cors());
+
+// express-winston logger makes sense BEFORE the router
+app.use(
+  logger({
+    transports: [new transports.Console()],
+    format: format.combine(format.colorize(), format.json()),
+  }),
+);
 
 // Register Core Endpoints
 app.get("/health", (_, res) => {

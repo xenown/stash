@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 class Datastore {
   constructor() {
     this.userId = v4();
+    this.language = "en";
   }
 
   public getUserId(): string {
@@ -15,10 +16,13 @@ class Datastore {
   }
 
   public getPlaidLanguage(): string {
-    return "en";
+    // English by default, but eventually we want the client to be able to
+    // store an override.
+    return this.language;
   }
 
   private userId: string;
+  private language: string;
 }
 
 const datastore = () => {
