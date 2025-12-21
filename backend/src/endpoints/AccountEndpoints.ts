@@ -2,11 +2,39 @@
  * @fileoverview Account Management Endpoints
  */
 
+import type { Request, Response } from "express";
 import { Router } from "express";
+import { matchedData } from "express-validator";
+
+import { plaid } from "../plaid/Plaid";
+import {
+  validate,
+  countryCodeValidator,
+  productValidator,
+} from "./InputValidators";
 
 const router = Router();
 
-router.post();
+// Create a link token with configs which we can then use to initialize Plaid Link client-side.
+// See https://plaid.com/docs/#create-link-token
+router.post(
+  "/create_user_token",
+  [countryCodeValidator, productValidator],
+  validate,
+  (req: Request, resp: Response) => {
+    const data = matchedData(req);
+    const res = plaid().createLinkToken(data["countryCodes"], data["products"]);
+    if (res) {
+      resp.json(res);
+    } else {
+      // Don't show internal error
+      resp.status(503);
+      resp.json({
+        error: "Service unavailable at the moment. Please try again later.",
+      });
+    }
+  },
+);
 
 // // Exchange token flow - exchange a Link public_token for
 // // an API access_token

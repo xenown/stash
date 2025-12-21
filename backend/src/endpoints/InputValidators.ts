@@ -1,0 +1,52 @@
+/**
+ * @fileoverview Endpoint Input Validators
+ */
+
+import type { ValidationChain } from "express-validator";
+import type { Request, Response, NextFunction } from "express";
+import { body, validationResult } from "express-validator";
+import { CountryCode, Products } from "plaid";
+
+const validate = (validations: ValidationChain[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    for (const validation of validations) {
+      await validation.run(req);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        break; // Stop running further validations if errors are found
+      }
+    }
+
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  };
+};
+
+const COUNTRY_CODE_VALUES = Object.values(CountryCode);
+const PRODUCT_VALUES = Object.values(Products);
+
+const countryCodeValidator = body("countryCodes")
+  .exists()
+  .withMessage("countryCodes is required")
+  .customSanitizer((value: string) => {
+    return value.toUpperCase();
+  })
+  .isIn(COUNTRY_CODE_VALUES)
+  .withMessage("countryCodes must be a valid plaid recognized country code");
+
+const productValidator = body("products")
+  .exists()
+  .withMessage("products is required")
+  .customSanitizer((value: string) => {
+    return value.toLowerCase();
+  })
+  .isIn(PRODUCT_VALUES)
+  .withMessage("products must be a valid plaid recognized product");
+
+export { validate, countryCodeValidator, productValidator };

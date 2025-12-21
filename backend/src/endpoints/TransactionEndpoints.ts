@@ -7,13 +7,6 @@ import type { Request, Response, NextFunction } from "express";
 
 const router = Router();
 
-// Create a link token with configs which we can then use to initialize Plaid Link client-side.
-// See https://plaid.com/docs/#create-link-token
-router.post(
-  "/create_user_token",
-  (req: Request, res: Response, next: NextFunction) => {},
-);
-
 // // Create a user token which can be used for Plaid Check, Income, or Multi-Item link flows
 // // https://plaid.com/docs/api/users/#usercreate
 // app.post("/api/create_user_token", function (request, response, next) {
