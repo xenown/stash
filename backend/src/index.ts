@@ -16,8 +16,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import compression from "compression";
 import cors from "cors";
-import { transports, format } from "winston";
-import { logger } from "express-winston";
+import { createLogger, format, transports } from "winston";
+import { logger as expressLogger } from "express-winston";
 
 import { router as accountRouter } from "./endpoints/AccountEndpoints.ts";
 import { router as txnRouter } from "./endpoints/TransactionEndpoints.ts";
@@ -33,6 +33,13 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
+const logger = createLogger({
+  level: "info",
+  format: format.combine(format.timestamp(), format.json()),
+  defaultMeta: { service: "main" },
+  transports: [new transports.Console()],
+});
+
 app.use(
   bodyParser.urlencoded({
     extended: false,
@@ -46,7 +53,7 @@ app.use(cors());
 
 // express-winston logger makes sense BEFORE the router
 app.use(
-  logger({
+  expressLogger({
     transports: [new transports.Console()],
     format: format.combine(format.colorize(), format.json()),
   }),
@@ -62,6 +69,16 @@ app.get("/health", (_, res) => {
 app.use("/account", accountRouter);
 app.use("/api", txnRouter);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.use((err, req, res, next) => {
+  logger.error("Internal Exception", err);
+  res
+    .status(500)
+    .send("An internal exception occured. Please try again later.");
 });
+
+app.listen(port, () => {
+  logger.info(`Server running at http://localhost:${port}`);
+});
+
+// Used for supertest testing
+export { app };

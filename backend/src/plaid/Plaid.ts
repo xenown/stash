@@ -15,7 +15,7 @@ import type {
   LinkTokenCreateResponse,
   Products,
 } from "plaid";
-import type { AxiosResponse, AxiosError } from "axios";
+import type { AxiosResponse } from "axios";
 
 import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 import { isAxiosError } from "axios";
@@ -80,7 +80,7 @@ class Plaid {
   public async createLinkToken(
     countryCodes: CountryCode[],
     products: Products[],
-  ): Promise<LinkTokenCreateResponse | null> {
+  ): Promise<LinkTokenCreateResponse> {
     const userId = datastore().getUserId();
     const configs: LinkTokenCreateRequest = {
       client_name: Plaid.APP_NAME,
@@ -91,15 +91,9 @@ class Plaid {
       },
       products: products,
     };
-    const res = await this.withRetry(() => {
+    return await this.withRetry(() => {
       return this.client.linkTokenCreate(configs);
     });
-    if (isAxiosError(res)) {
-      return null;
-    } else {
-      // Must be success
-      return res;
-    }
   }
 
   /**
@@ -119,13 +113,13 @@ class Plaid {
    * be immediately rethrown.
    * @param retriesLeft number of retries to make for an api call
    * @param interval time (ms) to wait between retries
-   * @return a successful axios response or the last failed axios response
+   * @return a successful axios response or throw an error
    */
   private async withRetry<T>(
     fn: () => Promise<AxiosResponse<T>>,
     retriesLeft: number = 3,
     interval: number = 300,
-  ): Promise<T | AxiosError> {
+  ): Promise<T> {
     if (process.env["PLAID_ENV"] == "sandbox") {
       // In test mode, don't bother with retries.
       retriesLeft = 0;
@@ -137,14 +131,11 @@ class Plaid {
       if (isAxiosError(error)) {
         const errorResponse = error.response ? error.response.data : null;
         logger.info("withRetry failed", [error.request.path, errorResponse]);
-        if (retriesLeft == 0) {
-          return error;
-        }
       } else {
         logger.info("withRetry failed", error);
-        if (retriesLeft == 0) {
-          throw error;
-        }
+      }
+      if (retriesLeft == 0) {
+        throw error;
       }
 
       // Wait for the specified interval before the next attempt

@@ -9,6 +9,7 @@ import { matchedData } from "express-validator";
 import { plaid } from "../plaid/Plaid.ts";
 import {
   validate,
+  stringArrayValidator,
   countryCodeValidator,
   productValidator,
 } from "./InputValidators.ts";
@@ -19,20 +20,19 @@ const router = Router();
 // See https://plaid.com/docs/#create-link-token
 router.post(
   "/create_user_token",
-  [countryCodeValidator, productValidator],
-  validate,
-  (req: Request, resp: Response) => {
+  validate([
+    stringArrayValidator("countryCodes"),
+    countryCodeValidator,
+    stringArrayValidator("products"),
+    productValidator,
+  ]),
+  async (req: Request, resp: Response) => {
     const data = matchedData(req);
-    const res = plaid().createLinkToken(data["countryCodes"], data["products"]);
-    if (res) {
-      resp.json(res);
-    } else {
-      // Don't show internal error
-      resp.status(503);
-      resp.json({
-        error: "Service unavailable at the moment. Please try again later.",
-      });
-    }
+    const res = await plaid().createLinkToken(
+      data["countryCodes"],
+      data["products"],
+    );
+    resp.json(res);
   },
 );
 

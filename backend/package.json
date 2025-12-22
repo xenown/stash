@@ -27,11 +27,15 @@
   },
   "dependenciesComments": {
     "body-parser": "Request Parsing",
+    "compression": "Compress responses for better latency",
     "cors": "CORS Support",
     "dotenv": "Env Variable Loader",
     "express": "Webserver Library",
+    "express-validator": "Middleware for verifying / sanitizing inputs",
+    "express-winston": "Express server logging",
     "plaid": "Plaid Support",
-    "uuid": "Client Id Creation"
+    "uuid": "Client Id Creation",
+    "winston": "General logging"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -53,19 +57,24 @@
     "mocha": "^11.7.5",
     "nodemon": "^3.1.11",
     "prettier": "^3.7.3",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0"
   },
   "devDependenciesComments": {
     "@types": "Typescript types",
+    "axios": "Plaid uses this under the hood. Just need type info from it.",
+    "chai": "Assertion library",
     "esbuild": "Bundler with ts support",
     "*eslint*": "Linting dependencies",
-    "globals": "eslint dependency",
-    "nodemon": "Hot reload support",
-    "prettier": "Code formatter",
     "eslint-config-prettier": "disable ESlint rules that conflict with Prettier",
     "eslint-plugin-prettier": "run Prettier as ESLint rule",
+    "globals": "eslint dependency",
+    "mocha": "Testing framework thats works with our ts setup",
+    "nodemon": "Hot reload support",
+    "prettier": "Code formatter",
+    "supertest": "Test http interface",
     "ts-node": "Typescript support for nodemon"
   }
 }
