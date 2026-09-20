@@ -22,7 +22,9 @@ export default [
       ...tseslint.configs.recommended.rules,
       ...prettierConfig.rules,
       // https://typescript-eslint.io/rules/no-unused-vars/
-      "no-unused-vars": "off",
+      "no-unused-vars": {
+        argsIgnorePattern: "^_",
+      },
       "@typescript-eslint/no-unused-vars": "error",
       "no-console": "warn",
       semi: ["error", "always"],

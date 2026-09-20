@@ -11,6 +11,8 @@
 // // Extension
 // //
 
+import type { Request, Response, NextFunction } from "express";
+
 import dotenv from "dotenv";
 import express from "express";
 import bodyParser from "body-parser";
@@ -69,7 +71,7 @@ app.get("/health", (_, res) => {
 app.use("/account", accountRouter);
 app.use("/api", txnRouter);
 
-app.use((err, req, res, next) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   logger.error("Internal Exception", err);
   res
     .status(500)

@@ -22,11 +22,9 @@ describe("Plaid Token Creation", () => {
   it("should fail with invalid client key", async () => {
     process.env["PLAID_CLIENT_ID"] = "test_id";
     const plaidInstance = plaid();
-    const res = await plaidInstance.createLinkToken(
-      [CountryCode.Us],
-      [Products.Assets],
-    );
-    assert.isNull(res);
+    assert.throws(async () => {
+      await plaidInstance.createLinkToken([CountryCode.Us], [Products.Assets]);
+    }, "AxiosError");
   });
 
   it("should fail with invalid client secret", async () => {
